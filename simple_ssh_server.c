@@ -10,10 +10,12 @@
 #include <netinet/in.h> 
 #include <arpa/inet.h>
 #include <stdlib.h>
+#include <string.h>
 
 int open_ptym(char **slave_name, int *master_fd)
 {
     int fd;
+    char *str;
     fd = posix_openpt(O_RDWR);
     if(fd<0) {
         perror("posix_openpt");
@@ -32,6 +34,9 @@ int open_ptym(char **slave_name, int *master_fd)
     }
 
     *slave_name = ptsname(fd);
+    str = malloc(strlen(*slave_name) + 1);
+    strcpy(str, *slave_name);
+    *slave_name = str;
     // *slave_name = "/dev/ttys002";
     if(NULL == *slave_name) {
         perror("ptsname");
@@ -188,6 +193,7 @@ void client_loop(int sock_fd)
         kill(child, 9);
     }
     close(master_fd);
+    free(slave_name);
 }
 int main(int argc, char **argv)
 {
