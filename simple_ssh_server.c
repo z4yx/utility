@@ -132,6 +132,7 @@ void client_loop(int sock_fd)
 
         close(slave_fd);
 
+        chdir("/");
         execlp("bash", "bash", NULL);
         _exit(1);
     }else{
@@ -191,6 +192,11 @@ void client_loop(int sock_fd)
 int main(int argc, char **argv)
 {
     int server_fd, client_fd;
+
+    if(argc < 2) {
+        printf("usage: simple_ssh_server <port>\n");
+        return 1;
+    }
 
     if(!open_socket(argv[1], &server_fd))
         _exit(1);

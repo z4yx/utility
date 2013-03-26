@@ -80,6 +80,11 @@ int main(int argc, char **argv)
     int master_fd, sock_fd;
     struct termios tio;
 
+    if(argc < 3) {
+        printf("usage: simple_ssh_client <server ip> <port>\n");
+        return 1;
+    }
+
     if(!open_socket(argv[2], argv[1], &sock_fd))
         _exit(1);
 
